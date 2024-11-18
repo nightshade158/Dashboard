@@ -95,8 +95,11 @@ const UserDashboard = () => {
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-2xl font-bold text-center mb-6">User  Dashboard</h1>
       <div className="absolute top-4 right-4 flex flex-col gap-4">
-  <Link className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' to="/admin">Admin</Link>
-        </div>
+  <Link className='absolute top-4 right-4 overflow-hidden rounded-lg px-20 py-6' to="/admin">
+    <span className='absolute inset-px flex items-center justify-center rounded-lg bg-black bg-gradient-to-t from-neutral-800 text-neutral-50'>Admin</span>
+    <span aria-hidden className='absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-ping before:bg-gradient-to-r before:from-purple-700 before:via-red-500 before:to-amber-400'/>
+  </Link>
+</div>
 
       <div className="mb-6">
         <h2 className="text-xl font-bold mb-4">Food Items</h2>

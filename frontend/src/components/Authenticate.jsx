@@ -54,9 +54,15 @@ const Authenticate = () => {
   return (
   <>
       <div className="absolute top-4 right-4 flex flex-col gap-4">
-  <Link className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' to="/">Home</Link>
-  <Link className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' to="/admin">Admin</Link>
-        </div>
+  <Link className='absolute top-20 right-4 overflow-hidden rounded-lg px-20 py-6' to="/">
+    <span className='absolute inset-px flex items-center justify-center rounded-lg bg-black bg-gradient-to-t from-neutral-800 text-neutral-50'>Home</span>
+    <span aria-hidden className='absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-ping before:bg-gradient-to-r before:from-purple-700 before:via-red-500 before:to-amber-400'/>
+  </Link>
+  <Link className='absolute top-4 right-4 overflow-hidden rounded-lg px-20 py-6' to="/admin">
+    <span className='absolute inset-px flex items-center justify-center rounded-lg bg-black bg-gradient-to-t from-neutral-800 text-neutral-50'>Admin</span>
+    <span aria-hidden className='absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-ping before:bg-gradient-to-r before:from-purple-700 before:via-red-500 before:to-amber-400'/>
+  </Link>
+</div>
   <div className="flex items-center justify-center mt-28">
     <div className="w-96 border rounded bg-white px-7 py-10">
       <form onSubmit={handleLogin}>
