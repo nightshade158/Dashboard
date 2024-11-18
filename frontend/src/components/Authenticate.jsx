@@ -53,7 +53,10 @@ const Authenticate = () => {
 
   return (
   <>
-  
+      <div className="absolute top-4 right-4 flex flex-col gap-4">
+  <Link className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' to="/">Home</Link>
+  <Link className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' to="/admin">Admin</Link>
+        </div>
   <div className="flex items-center justify-center mt-28">
     <div className="w-96 border rounded bg-white px-7 py-10">
       <form onSubmit={handleLogin}>

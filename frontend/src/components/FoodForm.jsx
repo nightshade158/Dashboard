@@ -101,31 +101,37 @@ const FoodForm = ({ foods, setFoods }) => {
       </div>
 
       <h3 className="mt-6 text-lg font-semibold">Food List</h3>
-      <ul className="space-y-2">
-        {foods.map((food) => (
-          <li key={food._id} className="flex justify-between">
-            <span>{food.name} - ${food.price}</span>
-            <div>
-              <button
-                className="bg-blue-500 text-white px-2 py-1 rounded"
-                onClick={() => {
-                  setFoodName(food.name);
-                  setFoodPrice(food.price);
-                  setEditingFood(food);
-                }}
-              >
-                Edit
-              </button>
-              <button
-                className="bg-red-500 text-white px-2 py-1 rounded ml-2"
-                onClick={() => handleDeleteFood(food._id)}
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-4">
+        {Array.isArray(foods) && foods.length > 0 ? (
+          <ul className="space-y-2">
+            {foods.map((food) => (
+              <li key={food._id} className="flex justify-between items-center mb-4">
+                <span>{food.name} - ${food.price}</span>
+                <div>
+                  <button
+                    className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
+                    onClick={() => {
+                      setFoodName(food.name);
+                      setFoodPrice(food.price);
+                      setEditingFood(food);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    onClick={() => handleDeleteFood(food._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No food items available.</p>
+        )}
+      </div>
     </div>
   );
 };

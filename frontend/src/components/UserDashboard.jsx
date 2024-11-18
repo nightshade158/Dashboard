@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const UserDashboard = () => {
   const [foods, setFoods] = useState([]);
@@ -93,6 +94,9 @@ const UserDashboard = () => {
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-2xl font-bold text-center mb-6">User  Dashboard</h1>
+      <div className="absolute top-4 right-4 flex flex-col gap-4">
+  <Link className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' to="/admin">Admin</Link>
+        </div>
 
       <div className="mb-6">
         <h2 className="text-xl font-bold mb-4">Food Items</h2>

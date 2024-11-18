@@ -5,6 +5,7 @@ import { Bar } from 'react-chartjs-2';
 import moment from 'moment';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const [foods, setFoods] = useState([]);
@@ -156,38 +157,12 @@ const AdminDashboard = () => {
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-2xl font-bold text-center mb-6">Admin Dashboard</h1>
+      <div className="absolute top-4 right-4 flex flex-col gap-4">
+  <Link className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' to="/">Home</Link>
+        </div>
       
       <div className="mb-6">
         <FoodForm foods={foods} setFoods={setFoods} />
-      </div>
-
-      <div className="mt-8">
-        <h2 className="text-xl font-bold mb-4">Food Items</h2>
-        <div>
-          {Array.isArray(foods) && foods.length > 0 ? (
-            foods.map((food) => (
-              <div key={food._id} className="flex justify-between items-center mb-4">
-                <span>{food.name} - ${food.price}</span>
-                <div >
-                  <button
-                    className="bg-yellow-500 text-white px-3 py-1 rounded mr-2"
-                    onClick={() => handleUpdateFood(food._id, { name: 'New Name', price: 20 })}
-                  >
-                    Update
-                  </button>
-                  <button
-                    className="bg-red-500 text-white px-3 py-1 rounded"
-                    onClick={() => handleDeleteFood(food._id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>No food items available.</p>
-          )}
-        </div>
       </div>
 
       <div className="mt-8">
@@ -218,7 +193,7 @@ const AdminDashboard = () => {
           )}
         </div>
         
-        {orders.length > 0 ? (
+        {orders.length > 0 && (
           <div>
             <div className="bg-yellow-200 p-4 rounded-lg mb-4 shadow-md">
               <p className="text-lg font-bold">Total Sales: ${totalRevenue.toFixed(2)}</p>
@@ -232,8 +207,9 @@ const AdminDashboard = () => {
               ))}
             </ul>
           </div>
-        ) : (
-          <p className='text-lg text-emerald-700'>No orders available.</p>
+        )}
+        {orders.length === 0 && (
+          <p className='text-lg text-emerald-700'>No recorded orders are available.</p>
         )}
 
         {/* // 7 days summary

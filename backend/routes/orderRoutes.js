@@ -64,7 +64,7 @@ router.get('/', async (req, res) => {
     const orderEntry = await Order.findOne({ date }); // Assuming 'date' is in YYYY-MM-DD format
 
     if (!orderEntry || orderEntry.orders.length === 0) {
-      return res.status(200).json([{}])
+      return res.status(200).json([])
     }
 
     // Extract the foodName and quantity from each order in the orders array
