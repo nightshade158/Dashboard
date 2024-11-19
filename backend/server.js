@@ -3,6 +3,7 @@ const cors = require('cors')
 const connectDB = require('./config/db');
 const orderRoutes = require('./routes/orderRoutes');
 const foodRoutes = require('./routes/foodRoutes');
+const userRoutes = require('./routes/userRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(cors())
 // Routes
 app.use('/api/foods', foodRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
