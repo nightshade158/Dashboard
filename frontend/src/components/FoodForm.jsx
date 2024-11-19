@@ -45,7 +45,7 @@ const FoodForm = ({ foods, setFoods }) => {
     try {
       const updatedFood = { name: foodName, price: parseFloat(foodPrice) };
       const response = await axios.put(`http://localhost:5000/api/foods/${editingFood._id}`, updatedFood);
-      setFoods((prevFoods) => 
+      setFoods((prevFoods) =>
         prevFoods.map((food) => food._id === editingFood._id ? response.data : food)
       );
       setFoodName('');
@@ -101,11 +101,11 @@ const FoodForm = ({ foods, setFoods }) => {
       </div>
 
       <h3 className="mt-6 text-lg font-semibold">Food List</h3>
-      <div className="mt-4">
+      <div className="mt-2">
         {Array.isArray(foods) && foods.length > 0 ? (
           <ul className="space-y-2">
             {foods.map((food) => (
-              <li key={food._id} className="flex justify-between items-center mb-4">
+              <li key={food._id} className="flex justify-between items-center">
                 <span>{food.name} - ${food.price}</span>
                 <div>
                   <button

@@ -12,7 +12,7 @@ router.post('/signup', async (req, res) => {
         // Check if user already exists
         const existingUser  = await User.findOne({ $or: [{ username }, { email }] });
         if (existingUser ) {
-            return res.status(400).json({ message: 'Username or email already exists ' });
+            return res.status(400).json({ message: 'Username or email already exists' });
         }
 
         // Hash the password
@@ -22,7 +22,7 @@ router.post('/signup', async (req, res) => {
         const authId = jwt.sign({ username, email }, 'your_jwt_secret', { expiresIn: '1h' });
 
         // Create a new user
-        const newUser   = new User({
+        const newUser  = new User({
             username,
             password: hashedPassword,
             email,
@@ -68,4 +68,5 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Export the router
 module.exports = router;
