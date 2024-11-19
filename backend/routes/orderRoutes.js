@@ -135,12 +135,12 @@ router.get('/last7days', async (req, res) => {
     const orders = await Order.aggregate([
       {
         $match: {
-          createdAt: { $gte: new Date(today.setDate(today.getDate() - 7)) }
+          date: { $gte: new Date(today.setDate(today.getDate() - 7)) } // Use the correct date field
         }
       },
       {
         $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } }, // Group by createdAt date field
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } }, // Group by date field
           totalSales: { $sum: "$grandTotal" } // Sum the grandTotal for each day
         }
       },
@@ -161,4 +161,5 @@ router.get('/last7days', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 module.exports = router;
