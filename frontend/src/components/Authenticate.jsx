@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import axios for making API calls
 import PasswordInput from './PasswordInput';
 
-const Authenticate = () => {
+const Authenticate = ({ onLogin }) => {
   const [user, setUser ] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -38,8 +38,10 @@ const Authenticate = () => {
 
         // Check if the user is an admin or not
         if (response.data.isadmin) {
+          onLogin('admin'); // Call the onLogin function with the role 'admin'
           navigate("/admin"); // Redirect to admin dashboard
         } else {
+          onLogin('user'); // Call the onLogin function with the role 'user'
           navigate("/user"); // Redirect to user dashboard
         }
       }
