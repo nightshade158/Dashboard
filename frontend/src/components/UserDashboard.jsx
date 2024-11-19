@@ -95,9 +95,6 @@ const UserDashboard = () => {
 
   return (
     <div style={{
-      margin: 0,
-      padding: 0,
-      height: '100vh',
       backgroundImage: `url(${assets.fastfood})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',

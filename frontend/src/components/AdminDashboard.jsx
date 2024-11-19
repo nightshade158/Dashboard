@@ -138,7 +138,7 @@ const AdminDashboard = () => {
     datasets: [
       {
         label: 'Sales ($)',
-        data: salesData.map(item => item.totalSales),
+        data: salesData.map(item => item.totalRevenue),
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
       },
     ],
@@ -146,9 +146,6 @@ const AdminDashboard = () => {
 
   return (
     <div style={{
-      margin: 0,
-      padding: 0,
-      height: '100vh',
       backgroundImage: `url(${assets.fastfood})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
