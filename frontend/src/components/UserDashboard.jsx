@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
 import { assets } from '../assets/assets';
 
@@ -96,9 +95,10 @@ const UserDashboard = () => {
   return (
     <div style={{
       backgroundImage: `url(${assets.fastfood})`,
+      height: '100vh',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundRepeat: 'repeat',
+      backgroundRepeat: 'no-repeat',
       backgroundAttachment: 'scroll',
     }}>
     <div className="max-w-6xl mx-auto p-6 border-hidden rounded-lg shadow-md" style={{

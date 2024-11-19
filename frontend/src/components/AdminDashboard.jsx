@@ -207,14 +207,14 @@ const AdminDashboard = () => {
       backgroundImage: `url(${assets.fastfood})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundRepeat: 'repeat',
+      backgroundRepeat: 'no-repeat',
       backgroundAttachment: 'scroll',
     }}>
-      <div className="max-w-6xl mx-auto p-6 rounded-lg shadow-md" style={{
-        background: 'linear-gradient(to right, orange, yellow, white)',
-      }}>
-        <Navbar name={"Admin Dashboard"} />
-        <div className="text-2xl font-bold text-center mb-6"></div>
+    <div className="max-w-6xl mx-auto p-6 border-hidden rounded-lg shadow-md" style={{
+      background: 'linear-gradient(to right, orange, yellow, white)',
+    }}>
+    <Navbar name={"Admin Dashboard"}/>
+      <div className="text-2xl font-bold text-center mb-6"></div>
 
         <div className="mb-6">
           <FoodForm foods={foods} setFoods={setFoods} />
