@@ -13,9 +13,13 @@
     font-size: large;
   }
 
-  body{
-    background-color: #fdfeff;
-    overflow-x: hidden;
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Make sure the body takes full height */
+    background-image: url('path/to/your/background-image.jpg'); /* Set your background image */
+    background-size: cover; /* Cover the entire viewport */
+    background-position: center; /* Center the background image */
   }
 }
 
@@ -26,7 +30,7 @@
   }
 
   .btn-primary{
-    @apply w-full text-sm font-bold bg-blue-300 text-white p-2 rounded my-1 hover:bg-blue-600;
+    @apply w-full text-sm font-bold bg-blue-600 text-white p-2 rounded my-1 hover:bg-blue-900;
   }
 
   .icon-btn{
@@ -35,6 +39,11 @@
 
   .input-label{
     @apply text-xs text-slate-400;
+  }
+
+  .translucent-bg {
+    background-color: rgba(255, 255, 255, 0.8); /* White background with 80% opacity */
+    border-radius: 10px; /* Optional: Add some border radius */
   }
   
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PasswordInput from './PasswordInput';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { assets } from '../assets/assets';
 
 const SignUp = () => {
   const [username, setUsername] = useState(""); // Added username state
@@ -69,15 +70,22 @@ const SignUp = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center mt-28">
-        <div className="w-96 border rounded bg-white px-7 py-10">
+      <div className="flex items-center justify-center mt-28" style={{
+    margin: 0,
+    padding: 0,
+    height: '100vh', // Make sure the div takes full height
+    backgroundImage: `url(${assets.Background})`, // Set your background image
+    backgroundSize: 'cover', // Cover the entire viewport
+    backgroundPosition: 'center', // Center the background image
+  }}>
+        <div className="w-96 border-hidden rounded bg-transparent px-7 py-10">
           <form onSubmit={handleSignUp}>
-            <h4 className="text-2xl mb-7">SignUp</h4>
+            <h4 className="text-8xl font-bold mb-7 text-center">SignUp</h4>
 
             <input 
               type="text" 
               placeholder="Username" 
-              className="input-box" 
+              className="input-box bg-white" 
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -85,7 +93,7 @@ const SignUp = () => {
             <input 
               type="text" 
               placeholder="Email" 
-              className="input-box" 
+              className="input-box bg-white" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -100,7 +108,7 @@ const SignUp = () => {
             <button type="submit" className="btn-primary">
               Create Account
             </button>
-            <p className="text-sm text-center mt-4">
+            <p className="text-2xl font-bold text-slate-500 text-center mt-4">
               Already have an account? <Link to="/" className="font-medium text-primary underline">
                 Login
               </Link>

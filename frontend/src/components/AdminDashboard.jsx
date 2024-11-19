@@ -7,6 +7,7 @@ import moment from 'moment';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Navbar from './Navbar';
+import { assets } from '../assets/assets';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -144,71 +145,84 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <Navbar name={"Admin Dashboard"} />
-      <div className="text-2xl font-bold text-center mb-6"></div>
+    <div style={{
+      margin: 0,
+      padding: 0,
+      height: '100vh',
+      backgroundImage: `url(${assets.fastfood})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'repeat',
+      backgroundAttachment: 'scroll',
+    }}>
+      <div className="max-w-6xl mx-auto p-6 rounded-lg shadow-md" style={{
+      background: 'linear-gradient(to right, orange, yellow, white)',
+    }}>
+        <Navbar name={"Admin Dashboard"} />
+        <div className="text-2xl font-bold text-center mb-6"></div>
 
-      <div className="mb-6">
-        <FoodForm foods={foods} setFoods={setFoods} />
-      </div>
-
-      <div className="mt-8">
-        <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-
-        <div className="flex items-center space-x-4">
-          <input
-            type="date"
-            className="border p-2 rounded mb-4"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-            onClick={fetchOrders}
-          >
-            Fetch Orders
-          </button>
-
-          {orders.length > 0 && (
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded mb-4"
-              onClick={generatePDFReport}
-            >
-              Export to PDF
-            </button>
-          )}
+        <div className="mb-6">
+          <FoodForm foods={foods} setFoods={setFoods} />
         </div>
 
-        {orders.length > 0 && (
-          <div>
-            <div className="bg-yellow-200 p-4 rounded-lg mb-4 shadow-md">
-              <p className="text-lg font-bold">Total Sales: ${totalRevenue.toFixed(2)}</p>
-            </div>
-            <h3 className="mt-4 text-lg">Fetched Orders:</h3>
-            <ul>
-              {orders.map((order, index) => (
-                <li key={index}>
-                  {order.foodName} - Quantity: {order.quantity} - Total: {order.total}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {orders.length === 0 && (
-          <p className='text-lg text-emerald-700'>No recorded orders are available.</p>
-        )}
-
-        {/* 7 day summary graph */}
         <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">Sales Report - Last 7 Days</h2>
-          <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+
+          <div className="flex items-center space-x-4">
+            <input
+              type="date"
+              className="border p-2 rounded mb-4"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+              onClick={fetchOrders}
+            >
+              Fetch Orders
+            </button>
+
+            {orders.length > 0 && (
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded mb-4"
+                onClick={generatePDFReport}
+              >
+                Export to PDF
+              </button>
+            )}
+          </div>
+
+          {orders.length > 0 && (
             <div>
-              <Bar data={data} />
+              <div className="bg-yellow-200 p-4 rounded-lg mb-4 shadow-md">
+                <p className="text-lg font-bold">Total Sales: ${totalRevenue.toFixed(2)}</p>
+              </div>
+              <h3 className="mt-4 text-lg">Fetched Orders:</h3>
+              <ul>
+                {orders.map((order, index) => (
+                  <li key={index}>
+                    {order.foodName} - Quantity: {order.quantity} - Total: {order.total}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="bg-gray-200 p-4 rounded shadow">
-              <h3 className="text-lg font-bold">Total Revenue (Last 7 Days)</h3>
-              <p className="text-2xl">${totalRevenue.toFixed(2)}</p>
+          )}
+          {orders.length === 0 && (
+            <p className='text-lg text-emerald-700'>No recorded orders are available.</p>
+          )}
+
+          {/* 7 day summary graph */}
+          <div className="mt-8">
+            <h2 className="text-xl font-bold mb-4">Sales Report - Last 7 Days</h2>
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <Bar data={data} />
+              </div>
+              <div className="bg-gray-200 p-4 rounded shadow">
+                <h3 className="text-lg font-bold">Total Revenue (Last 7 Days)</h3>
+                <p className="text-2xl">${totalRevenue.toFixed(2)}</p>
+              </div>
             </div>
           </div>
         </div>

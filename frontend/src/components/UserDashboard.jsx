@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
+import { assets } from '../assets/assets';
 
 const UserDashboard = () => {
   const [foods, setFoods] = useState([]);
@@ -93,8 +94,19 @@ const UserDashboard = () => {
   };
 
   return (
-  <div>
-    <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div style={{
+      margin: 0,
+      padding: 0,
+      height: '100vh',
+      backgroundImage: `url(${assets.fastfood})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'repeat',
+      backgroundAttachment: 'scroll',
+    }}>
+    <div className="max-w-6xl mx-auto p-6 border-hidden rounded-lg shadow-md" style={{
+      background: 'linear-gradient(to right, orange, yellow, white)',
+    }}>
     <Navbar name={"User Dashboard"}/>
       <div className="text-2xl font-bold text-center mb-6"></div>
 
@@ -103,10 +115,11 @@ const UserDashboard = () => {
         {foods.length > 0 ? (
           foods.map((food) => (
             <div key={food._id} className="flex justify-between items-center mb-4">
-              <span>{food.name} - ${food.price}</span>
+              <span className='text-2xl'>{food.name} - ${food.price}</span>
               <div>
                 <input
-                  type="number"
+                  type="text"
+                  inputMode='numeric'
                   min="1"
                   value={food.quantity || 0}
                   onChange={(e) => handleQuantityChange(e, food._id)}

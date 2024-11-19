@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import axios for making API calls
 import PasswordInput from './PasswordInput';
+import { assets } from '../assets/assets';
 
 const Authenticate = ({ onLogin }) => {
   const [user, setUser ] = useState("");
@@ -68,37 +69,44 @@ const Authenticate = ({ onLogin }) => {
           <span aria-hidden className='absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-ping before:bg-gradient-to-r before:from-purple-700 before:via-red-500 before:to-amber-400'/>
         </Link>
       </div> */}
-      <div className="flex items-center justify-center mt-28">
-        <div className="w-96 border rounded bg-white px-7 py-10">
-          <form onSubmit={handleLogin}>
-            <h4 className="text-2xl mb-7">Login</h4>
+      <div className="flex items-center justify-center mt-28" style={{
+    margin: 0,
+    padding: 0,
+    height: '100vh', // Make sure the div takes full height
+    backgroundImage: `url(${assets.Background})`, // Set your background image
+    backgroundSize: 'cover', // Cover the entire viewport
+    backgroundPosition: 'center', // Center the background image
+  }}>
+  <div className="w-96 border-hidden rounded bg-transparent px-4 py-7"> {/* Added translucent-bg class */}
+    <form onSubmit={handleLogin}>
+      <h4 className="text-8xl font-bold mb-7 text-center">Login</h4>
 
-            <input 
-              type="text" 
-              placeholder="Username" // Changed from Email to Username
-              className="input-box" 
-              value={user}
-              onChange={(e) => setUser (e.target.value)}
-            />
+      <input 
+        type="text" 
+        placeholder="Username" // Changed from Email to Username
+        className="input-box bg-white" 
+        value={user}
+        onChange={(e) => setUser  (e.target.value)}
+      />
 
-            <PasswordInput 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+      <PasswordInput 
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
-            {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
+      {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
 
-            <button type="submit" className="btn-primary">
-              Login
-            </button>
-            <p className="text-sm text-center mt-4">
-              Not registered yet? <Link to="/signUp" className="font-medium text-primary underline">
-                Create an Account
-              </Link>
-            </p>
-          </form>
-        </div>
-      </div>
+      <button type="submit" className="btn-primary">
+        Login
+      </button>
+      <p className="text-lg font-bold text-teal-800 text-center mt-4">
+        Not registered yet? <Link to="/signUp" className="font-medium text-primary underline">
+          Create an Account
+        </Link>
+      </p>
+    </form>
+  </div>
+</div>
     </>
   );
 };

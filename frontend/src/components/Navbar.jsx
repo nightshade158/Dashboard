@@ -4,7 +4,7 @@ import { assets } from '../assets/assets';
 
 const Navbar = ({ name }) => {
     return (
-        <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow">
+        <div className="bg-transparent flex border-transparent items-center justify-between px-6 py-2">
             <h2 className="text-xl font-medium text-black py-2">
                 <img src={assets.logo} alt='' className='w-24' />
             </h2>
