@@ -99,7 +99,7 @@ const Authenticate = ({ onLogin }) => {
       <button type="submit" className="btn-primary">
         Login
       </button>
-      <p className="text-lg font-bold text-teal-800 text-center mt-4">
+      <p className="text-2xl font-bold text-slate-500 text-center mt-4">
         Not registered yet? <Link to="/signUp" className="font-medium text-primary underline">
           Create an Account
         </Link>

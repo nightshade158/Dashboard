@@ -15,6 +15,7 @@ const AdminDashboard = () => {
   const [foods, setFoods] = useState([]);
   const [orders, setOrders] = useState([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
+  const [sumRevenue, setSumRevenue] = useState(0);
   const [date, setDate] = useState('');
   const [salesData, setSalesData] = useState([]);
 
@@ -115,14 +116,15 @@ const AdminDashboard = () => {
   const fetchSalesData = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/orders/last7days');
-      if (Array.isArray(response.data)) {
-        const total = response.data.reduce((acc, item) => acc + item.totalSales, 0);
-        setSalesData(response.data);
-        setTotalRevenue(total);
+      // Check if response contains salesData and sumTotal
+      if (response.data && Array.isArray(response.data.salesData)) {
+        const total = response.data.sumTotal; // Use sumTotal from the response
+        setSalesData(response.data.salesData); // Set salesData from the response
+        setSumRevenue(total); // Set totalRevenue from sumTotal
       } else {
-        console.error('Expected an array for sales data but got:', response.data);
+        console.error('Expected sales data to be an array but got:', response.data);
         setSalesData([]);
-        setTotalRevenue(0);
+        setSumRevenue(0);
       }
     } catch (error) {
       console.error('Error fetching sales data:', error);
@@ -134,14 +136,70 @@ const AdminDashboard = () => {
   }, []);
 
   const data = {
-    labels: salesData.map(item => moment(item.date).format('YYYY-MM-DD')), // Format date if needed
+    labels: salesData.map(item => moment(item.date).format('YYYY-MM-DD')),
     datasets: [
       {
         label: 'Sales ($)',
-        data: salesData.map(item => item.totalRevenue),
+        data: salesData.map(item => item.totalSales),
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+        barPercentage: 0.6, // Adjust the width of the bars
+        categoryPercentage: 0.8, // Adjust the spacing between bars
       },
     ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false, // Allow the chart to fill the container
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          font: {
+            size: 16, // Increase font size for legend
+          },
+        },
+      },
+      title: {
+        display: true,
+        text: 'Sales Data for Last 7 Days',
+        font: {
+          size: 20, // Increase font size for title
+        },
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Date',
+          font: {
+            size: 16, // Increase font size for x-axis title
+          },
+        },
+        ticks: {
+          font: {
+            size: 14, // Increase font size for x-axis labels
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Sales ($)',
+          font: {
+            size: 16, // Increase font size for y-axis title
+          },
+        },
+        ticks: {
+          font: {
+            size: 14, // Increase font size for y-axis labels
+          },
+        },
+      },
+    },
   };
 
   return (
@@ -153,8 +211,8 @@ const AdminDashboard = () => {
       backgroundAttachment: 'scroll',
     }}>
       <div className="max-w-6xl mx-auto p-6 rounded-lg shadow-md" style={{
-      background: 'linear-gradient(to right, orange, yellow, white)',
-    }}>
+        background: 'linear-gradient(to right, orange, yellow, white)',
+      }}>
         <Navbar name={"Admin Dashboard"} />
         <div className="text-2xl font-bold text-center mb-6"></div>
 
@@ -195,7 +253,7 @@ const AdminDashboard = () => {
               <div className="bg-yellow-200 p-4 rounded-lg mb-4 shadow-md">
                 <p className="text-lg font-bold">Total Sales: ${totalRevenue.toFixed(2)}</p>
               </div>
-              <h3 className="mt-4 text-lg">Fetched Orders:</h3>
+              <h3 className="mt-4 font-bold text-lg">Fetched Orders:</h3>
               <ul>
                 {orders.map((order, index) => (
                   <li key={index}>
@@ -213,13 +271,53 @@ const AdminDashboard = () => {
           <div className="mt-8">
             <h2 className="text-xl font-bold mb-4">Sales Report - Last 7 Days</h2>
             <div className="flex justify-between items-center mb-4">
-              <div>
-                <Bar data={data} />
+              <div style={{ width: '450px', height: '450px', padding: '20px', backgroundColor: 'transparent', borderRadius: '8px' }}>
+                <Bar
+                  data={data}
+                  options={options}
+                  style={{ height: '100%', width: '100%' }} // Ensure the chart fills the container
+                />
               </div>
-              <div className="bg-gray-200 p-4 rounded shadow">
-                <h3 className="text-lg font-bold">Total Revenue (Last 7 Days)</h3>
-                <p className="text-2xl">${totalRevenue.toFixed(2)}</p>
+              <div className="bg-gray-200 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl duration-300 ease-in-out mx-auto my-4" style={{ width: 'fit-content' }}>
+                <h3 className="text-lg font-bold text-gray-800">Total Revenue (Last 7 Days)</h3>
+                <p className="text-2xl text-gray-900 font-semibold">${sumRevenue.toFixed(2)}</p>
               </div>
+
+              <style jsx>{`
+  .bg-gray-200 {
+    background: linear-gradient(135deg, #e2e8f0, #edf2f7);
+    border-radius: 8px;
+    padding: 20px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+  
+  .bg-gray-200::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 0, 150, 0.5), rgba(0, 204, 255, 0.5));
+    z-index: -1;
+    border-radius: 8px;
+    opacity: 0.5; /* Adjust opacity for a subtle effect */
+  }
+
+  .shadow-lg {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .hover\:scale-105:hover {
+    transform: scale(1.05);
+  }
+
+  .hover\:shadow-xl:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+`}</style>
             </div>
           </div>
         </div>

@@ -125,6 +125,7 @@ router.get('/last7days', async (req, res) => {
   const today = new Date();
   const last7Days = [];
 
+  // Generate the last 7 days in YYYY-MM-DD format
   for (let i = 6; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
@@ -132,15 +133,19 @@ router.get('/last7days', async (req, res) => {
   }
 
   try {
+    // Create a start date for the last 7 days
+    const startDate = new Date();
+    startDate.setDate(today.getDate() - 6); // Set startDate to 6 days before today
+
     const orders = await Order.aggregate([
       {
         $match: {
-          date: { $gte: new Date(today.setDate(today.getDate() - 7)) } // Use the correct date field
+          date: { $gte: startDate.toISOString().split('T')[0] } // Match orders from the last 7 days
         }
       },
       {
         $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } }, // Group by date field
+          _id: "$date", // Group by date field
           totalSales: { $sum: "$grandTotal" } // Sum the grandTotal for each day
         }
       },
@@ -149,13 +154,23 @@ router.get('/last7days', async (req, res) => {
       }
     ]);
 
-    // Fill in missing days with 0 sales
+    // Create a map for quick lookup of total sales by date
+    const salesMap = orders.reduce((acc, order) => {
+      acc[order._id] = order.totalSales; // Map date to totalSales
+      return acc;
+    }, {});
+
+    // Fill in missing days with 0 sales and prepare the response
     const salesData = last7Days.map(date => {
-      const order = orders.find(o => o._id === date);
-      return { date, totalSales: order ? order.totalSales : 0 }; // Use totalSales as sales data for plotting
+      const totalSales = salesMap[date] || 0; // Get totalSales or default to 0
+      return { date, totalSales }; // Create object for response
     });
 
-    res.json(salesData);
+    // Calculate the sum total of all grand totals
+    const sumTotal = salesData.reduce((sum, day) => sum + day.totalSales, 0);
+
+    // Return both the sales data and the sum total
+    res.json({ salesData, sumTotal });
   } catch (error) {
     console.error('Error fetching orders:', error);
     res.status(500).send('Server Error');
