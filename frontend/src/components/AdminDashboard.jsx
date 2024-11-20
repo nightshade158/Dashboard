@@ -224,18 +224,25 @@ const AdminDashboard = () => {
         <div className="text-2xl font-bold text-center mb-6"></div>
 
         {/* Button to add middlemen */}
-        <div className="mb-6">
+
+{/*         <div className="mb-6">
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
             onClick={handleAddMiddleman}
           >
             Add Middleman
           </button>
-        </div>
+        </div> */}
 
         {/* Manage Food items section starts */}
         <div className="mb-6">
           <FoodForm foods={foods} setFoods={setFoods} />
+          <div className="absolute top-48 right-72 flex flex-col gap-4"> {/* Changed to absolute positioning */}
+    <button className='relative overflow-hidden rounded-lg px-20 py-6' onClick={handleAddMiddleman}>
+        <span className='absolute inset-px flex items-center justify-center rounded-lg bg-black bg-gradient-to-t from-neutral-800 text-neutral-50'>Add Middleman</span>
+        <span aria-hidden className='absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-ping before:bg-gradient-to-r before:from-purple-700 before:via-red-500 before:to-amber-400'/>
+    </button>
+</div>
         </div>
         {/* Manage Food items section ends */}
 

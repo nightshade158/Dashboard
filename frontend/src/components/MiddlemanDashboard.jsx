@@ -8,7 +8,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Navbar from './Navbar';
 import { assets } from '../assets/assets';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -20,9 +20,7 @@ const MiddlemanDashboard = () => {
   const [sumRevenue, setSumRevenue] = useState(0); // State for sum revenue from last 7 days
   const [date, setDate] = useState(''); // State for selected date
   const [salesData, setSalesData] = useState([]); // State for sales data
-  const [features, setFeatures] = useState(location.state?.features || []); // State for features
-  const [username, setUsername] = useState(''); // State for username
-  const navigate = useNavigate(); // Hook for navigation
+  const features = location.state?.features || []; // State for features
 
   // Fetch food items on component mount
   useEffect(() => {
@@ -213,8 +211,10 @@ const MiddlemanDashboard = () => {
   };
 
   return (
-    <div>
       <div style={{
+        margin: 0,
+        padding: 0,
+        height: '100vh',
         backgroundImage: `url(${assets.fastfood})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -298,7 +298,6 @@ const MiddlemanDashboard = () => {
           {features.length === 0 && <p>No features assigned to you.</p>}
         </div>
       </div>
-    </div>
   );
 };
 

@@ -67,18 +67,6 @@ const Authenticate = ({ onLogin }) => {
   };
 
   return (
-    <>
-      {/* Two button shining */}
-{/*       <div className="absolute top-4 right-4 flex flex-col gap-4">
-        <Link className='absolute top-20 right-4 overflow-hidden rounded-lg px-20 py-6' to="/nouse">
-          <span className='absolute inset-px flex items-center justify-center rounded-lg bg-black bg-gradient-to-t from-neutral-800 text-neutral-50'>No use</span>
-          <span aria-hidden className='absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-ping before:bg-gradient-to-r before:from-purple-700 before:via-red-500 before:to-amber-400' />
-        </Link>
-        <Link className='absolute top-4 right-4 overflow-hidden rounded-lg px-20 py-6' to="/nouse">
-          <span className='absolute inset-px flex items-center justify-center rounded-lg bg-black bg-gradient-to-t from-neutral-800 text-neutral-50'>No use</span>
-          <span aria-hidden className='absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-ping before:bg-gradient-to-r before:from-purple-700 before:via-red-500 before:to-amber-400' />
-        </Link>
-      </div> */}
       <div className="flex items-center justify-center mt-28" style={{
         margin: 0,
         padding: 0,
@@ -86,8 +74,10 @@ const Authenticate = ({ onLogin }) => {
         backgroundImage: `url(${assets.Background})`, // Set your background image
         backgroundSize: 'cover', // Cover the entire viewport
         backgroundPosition: 'center', // Center the background image
+        backgroundRepeat: 'repeat',
+        backgroundAttachment: 'scroll',
       }}>
-        <div className="w-96 border-hidden rounded bg-transparent px-4 py-7"> {/* Added translucent-bg class */}
+        <div className="w-96 border-hidden rounded bg-transparent px-7 py-10"> {/* Added translucent-bg class */}
           <form onSubmit={handleLogin}>
             <h4 className="text-8xl font-bold mb-7 text-center">Login</h4>
 
@@ -117,7 +107,6 @@ const Authenticate = ({ onLogin }) => {
           </form>
         </div>
       </div>
-    </>
   );
 };
 
