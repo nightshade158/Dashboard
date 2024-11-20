@@ -132,32 +132,32 @@ router.get('/middlemanfeatures', async (req, res) => {
 
 router.get('/middlemen', async (req, res) => {
     try {
-      const middlemen = await User.find({ ismiddle: true }); // Filter users by isAdmin field
-      res.status(200).json(middlemen);
+        const middlemen = await User.find({ ismiddle: true });
+        res.status(200).json(middlemen);
     } catch (error) {
-      console.error('Error fetching middlemen:', error);
-      res.status(500).json({ message: 'Server error' });
+        console.error('Error fetching middlemen:', error);
+        res.status(500).json({ message: 'Server error' });
     }
-  });
+});
 
-  router.post('/editmiddlefeatures', async (req, res) => {
+router.post('/editmiddlefeatures', async (req, res) => {
     const { username, features } = req.body;
-  
+
     try {
-      const updatedMiddleman = await User.findOneAndUpdate(
-        { username },
-        { features },
-        { new: true } // Return the updated document
-      );
-  
-      if (!updatedMiddleman) {
-        return res.status(404).json({ message: 'Middleman not found' });
-      }
-  
-      res.status(200).json({ message: 'Middleman features updated successfully', updatedMiddleman });
+        const updatedMiddleman = await User.findOneAndUpdate(
+            { username },
+            { features },
+            { new: true }
+        );
+
+        if (!updatedMiddleman) {
+            return res.status(404).json({ message: 'Middleman not found' });
+        }
+
+        res.status(200).json({ message: 'Middleman features updated successfully', updatedMiddleman });
     } catch (error) {
-      console.error('Error updating middleman features:', error);
-      res.status(500).json({ message: 'Server error' });
+        console.error('Error updating middleman features:', error);
+        res.status(500).json({ message: 'Server error' });
     }
-  });
+});
 module.exports = router;
