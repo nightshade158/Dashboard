@@ -13,18 +13,26 @@ const userSchema = new mongoose.Schema({
   },
   authId: {
     type: String,
-    required: true,
+    required: false,
     unique: true
   },
   isadmin: {
     type: Boolean,
     default: false
   },
+  ismiddle: {
+    type: Boolean,
+    default: false // New field to indicate if the user is a middleman
+  },
   email: {
     type: String,
     required: true,
     unique: true,
     trim: true
+  },
+  features: {
+    type: [String], // Array to store features assigned to the middleman
+    default: []
   },
   createdAt: {
     type: Date,

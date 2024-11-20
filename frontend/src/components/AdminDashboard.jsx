@@ -8,6 +8,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Navbar from './Navbar';
 import { assets } from '../assets/assets';
+import { useNavigate } from 'react-router-dom';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -18,6 +19,7 @@ const AdminDashboard = () => {
   const [sumRevenue, setSumRevenue] = useState(0);
   const [date, setDate] = useState('');
   const [salesData, setSalesData] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -135,6 +137,11 @@ const AdminDashboard = () => {
     fetchSalesData();
   }, []);
 
+  // Function to navigate to AddMiddleman component
+  const handleAddMiddleman = () => {
+    navigate('/addmiddleman'); // Redirect to AddMiddleman page
+  };
+
   const data = {
     labels: salesData.map(item => moment(item.date).format('YYYY-MM-DD')),
     datasets: [
@@ -210,16 +217,29 @@ const AdminDashboard = () => {
       backgroundRepeat: 'no-repeat',
       backgroundAttachment: 'scroll',
     }}>
-    <div className="max-w-6xl mx-auto p-6 border-hidden rounded-lg shadow-md" style={{
-      background: 'linear-gradient(to right, orange, yellow, white)',
-    }}>
-    <Navbar name={"Admin Dashboard"}/>
-      <div className="text-2xl font-bold text-center mb-6"></div>
+      <div className="max-w-6xl mx-auto p-6 border-hidden rounded-lg shadow-md" style={{
+        background: 'linear-gradient(to right, orange, yellow, white)',
+      }}>
+        <Navbar name={"Admin Dashboard"} />
+        <div className="text-2xl font-bold text-center mb-6"></div>
 
+        {/* Button to add middlemen */}
+        <div className="mb-6">
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+            onClick={handleAddMiddleman}
+          >
+            Add Middleman
+          </button>
+        </div>
+
+        {/* Manage Food items section starts */}
         <div className="mb-6">
           <FoodForm foods={foods} setFoods={setFoods} />
         </div>
+        {/* Manage Food items section ends */}
 
+        {/* Daily Orders Summary section starts */}
         <div className="mt-8">
           <h2 className="text-xl font-bold mb-4">Order Summary</h2>
 
@@ -267,7 +287,8 @@ const AdminDashboard = () => {
             <p className='text-lg text-emerald-700'>No recorded orders are available.</p>
           )}
 
-          {/* 7 day summary graph */}
+          {/* Weekly Sales Report section starts*/}
+
           <div className="mt-8">
             <h2 className="text-xl font-bold mb-4">Sales Report - Last 7 Days</h2>
             <div className="flex justify-between items-center mb-4">
@@ -283,44 +304,50 @@ const AdminDashboard = () => {
                 <p className="text-2xl text-gray-900 font-semibold">${sumRevenue.toFixed(2)}</p>
               </div>
 
-              <style jsx>{`
-  .bg-gray-200 {
-    background: linear-gradient(135deg, #e2e8f0, #edf2f7);
-    border-radius: 8px;
-    padding: 20px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-    position: relative;
-  }
-  
-  .bg-gray-200::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 0, 150, 0.5), rgba(0, 204, 255, 0.5));
-    z-index: -1;
-    border-radius: 8px;
-    opacity: 0.5; /* Adjust opacity for a subtle effect */
-  }
+              <style jsx>{
+                `.bg - gray - 200 {
+                  background: linear-gradient(135deg, #e2e8f0, #edf2f7);
+                  border-radius: 8px;
+                  padding: 20px;
+                  border: 2px solid transparent;
+                  background-clip: padding-box;
+                  position: relative;
+                }
 
-  .shadow-lg {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  }
+                .bg-gray-200::before {
+                  content: '';
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  background: linear-gradient(135deg, rgba(255, 0, 150, 0.5), rgba(0, 204, 255, 0.5));
+                  z-index: -1;
+                  border-radius: 8px;
+                  opacity: 0.5; /* Adjust opacity for a subtle effect */
+                }
 
-  .hover\:scale-105:hover {
-    transform: scale(1.05);
-  }
+                .shadow-lg {
+                  box - shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                }
 
-  .hover\:shadow-xl:hover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  }
-`}</style>
+                .hover\:scale-105:hover {
+                  transform: scale(1.05);
+                }
+
+                .hover\:shadow-xl:hover {
+                  box - shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                }`}
+              </style>
             </div>
           </div>
+
+          {/* Weekly Sales Report section ends */}
+
         </div>
+
+        {/* Daily Order Summary section ends */}
+
       </div>
     </div>
   );
