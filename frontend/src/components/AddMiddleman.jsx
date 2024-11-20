@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { assets } from '../assets/assets';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,9 +13,27 @@ const AddMiddleman = () => {
     getDailyOrders: false,
     getWeeklySales: false,
   });
+  const [existingMiddlemen, setExistingMiddlemen] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [isShowPassword, setIsShowPassword] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedMiddleman, setSelectedMiddleman] = useState(null);
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
+  const availableFeatures = ['manageFoods', 'getDailyOrders', 'getWeeklySales'];
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchMiddlemen = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/users/middlemen');
+        console.log('Fetched middlemen:', response.data);
+        setExistingMiddlemen(response.data);
+      } catch (error) {
+        console.error('Error fetching middlemen:', error);
+      }
+    };
+    fetchMiddlemen();
+  }, []);
 
   const handleCheckboxChange = (e) => {
     setFeatures({ ...features, [e.target.name]: e.target.checked });
@@ -47,6 +65,8 @@ const AddMiddleman = () => {
           getWeeklySales: false,
         });
         navigate('/admin');
+        const updatedMiddlemenResponse = await axios.get('http://localhost:5000/api/users/middlemen');
+        setExistingMiddlemen(updatedMiddlemenResponse.data);
       } else {
         setErrorMessage('Failed to add middleman, please try again.');
       }
@@ -60,11 +80,47 @@ const AddMiddleman = () => {
     }
   };
 
+  const handleEditFeatures = (middleman) => {
+    setSelectedMiddleman(middleman);
+    setSelectedFeatures(middleman.features || []);
+    setModalVisible(true);
+  };
+
+  const handleFeatureChange = (feature) => {
+    setSelectedFeatures((prev) => {
+      if (prev.includes(feature)) {
+        return prev.filter(f => f !== feature);
+      } else {
+        return [...prev, feature];
+      }
+    });
+  };
+
+  const confirmFeatureUpdate = async () => {
+    if (selectedMiddleman) {
+      try {
+        const response = await axios.post('http://localhost:5000/api/users/editmiddlefeatures', {
+          username: selectedMiddleman.username,
+          features: selectedFeatures,
+        });
+
+        if (response.status === 200) {
+          alert('Middleman features updated successfully');
+          const updatedMiddlemenResponse = await axios.get('http://localhost:5000/api/users/middlemen');
+          setExistingMiddlemen(updatedMiddlemenResponse.data);
+          setModalVisible(false);
+        } else {
+          setErrorMessage('Failed to update middleman features, please try again.');
+        }
+      } catch (error) {
+        console.error('Error updating middleman features:', error);
+        setErrorMessage('Failed to update middleman features');
+      }
+    }
+  };
+
   return (
     <div style={{
-      margin: 0,
-      padding: 0,
-      height: '100vh',
       backgroundImage: `url(${assets.admin})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
@@ -78,6 +134,7 @@ const AddMiddleman = () => {
           <span aria-hidden className='absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-ping before:bg-gradient-to-r before:from-purple-700 before:via-red-500 before:to-amber-400' />
         </Link>
       </div>
+
       <form
         onSubmit={handleSubmit}
         className="bg-gray-800 bg-opacity-80 p-8 rounded-lg shadow-lg max-w-md mx-auto"
@@ -166,6 +223,55 @@ const AddMiddleman = () => {
 
         {errorMessage && <p className="text-red-500 mt-4 text-center">{errorMessage}</p>}
       </form>
+
+      <div className="mt-8 p-6 bg-gray-800 rounded-lg shadow-lg max-w-md mx-auto">
+        <h3 className="text-3xl font-bold text-white mb-6 text-center">Existing Middlemen</h3>
+        {existingMiddlemen.map((middleman) => (
+          <div key={middleman.username} className="bg-gray-700 p-5 rounded-lg mb-6 shadow-md transition-transform transform hover:scale-105">
+            <h4 className="text-xl font-semibold text-white capitalize">{middleman.username}</h4>
+            <p className="text-gray-300 text-lg">Features: {middleman.features ? middleman.features.join(', ') : 'No features assigned'}</p>
+            <button
+              onClick={() => handleEditFeatures(middleman)}
+              className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-5 py-2 rounded-lg mt-4 transition duration-200"
+            >
+              Update Features
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {modalVisible && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4">Edit Features for {selectedMiddleman.username}</h3>
+            {availableFeatures.map((feature) => (
+              <label key={feature} className="flex items-center mb-2">
+                <input
+                  type="checkbox"
+                  checked={selectedFeatures.includes(feature)}
+                  onChange={() => handleFeatureChange(feature)}
+                  className="mr-2"
+                />
+                {feature.charAt(0).toUpperCase() + feature.slice(1).replace(/([A-Z])/g, ' $1')}
+              </label>
+            ))}
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={() => setModalVisible(false)}
+                className="bg-red-500 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmFeatureUpdate}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
