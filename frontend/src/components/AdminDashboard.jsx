@@ -223,17 +223,6 @@ const AdminDashboard = () => {
         <Navbar name={"Admin Dashboard"} />
         <div className="text-2xl font-bold text-center mb-6"></div>
 
-        {/* Button to add middlemen */}
-
-{/*         <div className="mb-6">
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-            onClick={handleAddMiddleman}
-          >
-            Add Middleman
-          </button>
-        </div> */}
-
         {/* Manage Food items section starts */}
         <div className="mb-6">
           <FoodForm foods={foods} setFoods={setFoods} />
