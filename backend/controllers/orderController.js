@@ -1,6 +1,5 @@
 const Order = require('../models/Order');
 
-// Controller to fetch orders
 const getOrders = async (req, res) => {
   try {
     const { date } = req.query;
@@ -34,10 +33,9 @@ const getOrders = async (req, res) => {
   }
 };
 
-// Controller to create a new order
 const createOrder = async (req, res) => {
   try {
-    const newOrder = new Order(req.body); // Assuming order data is in the request body
+    const newOrder = new Order(req.body);
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
   } catch (error) {

@@ -4,10 +4,9 @@ import axios from 'axios';
 const FoodForm = ({ foods, setFoods }) => {
   const [foodName, setFoodName] = useState('');
   const [foodPrice, setFoodPrice] = useState('');
-  const [editingFood, setEditingFood] = useState(null); // Track the food being edited
+  const [editingFood, setEditingFood] = useState(null);
 
   useEffect(() => {
-    // Fetch food items on component mount
     const fetchFoods = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/foods');
@@ -50,7 +49,7 @@ const FoodForm = ({ foods, setFoods }) => {
       );
       setFoodName('');
       setFoodPrice('');
-      setEditingFood(null); // Reset editing state
+      setEditingFood(null);
     } catch (error) {
       console.error('Error updating food:', error);
     }

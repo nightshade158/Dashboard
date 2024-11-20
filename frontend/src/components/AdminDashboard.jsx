@@ -38,23 +38,18 @@ const AdminDashboard = () => {
     fetchFoods();
   }, []);
 
-  // PDF generation
   const generatePDFReport = () => {
 
     const reportDate = moment(date).format('DD-MM-YYYY');
 
-    // Create a new jsPDF instance
     const doc = new jsPDF();
 
-    // Set document title
     doc.setFontSize(18);
     doc.text('Order Summary Report', 14, 22);
 
-    // Add date of report from the report's actual date
     doc.setFontSize(12);
     doc.text(`Date: ${reportDate}`, 14, 30);
 
-    // Prepare table data
     const tableColumn = ['Food Name', 'Quantity', 'Total'];
     const tableRows = orders.map(order => [
       order.foodName,
@@ -62,11 +57,9 @@ const AdminDashboard = () => {
       `$${order.total.toFixed(2)}`
     ]);
 
-    // Add summary information
     doc.setFontSize(12);
     doc.text(`Total Revenue: $${totalRevenue.toFixed(2)}`, 14, 40);
 
-    // Generate table
     doc.autoTable({
       startY: 50,
       head: [tableColumn],
@@ -76,12 +69,11 @@ const AdminDashboard = () => {
         fontSize: 10,
       },
       headStyles: {
-        fillColor: [22, 160, 133], // Teal color
+        fillColor: [22, 160, 133],
         textColor: 255,
       },
     });
 
-    // Save the PDF
     doc.save(`Order_Summary_${reportDate}.pdf`);
   };
 
@@ -94,18 +86,16 @@ const AdminDashboard = () => {
       const formattedDate = moment(date).format('YYYY-MM-DD');
       const response = await axios.get('http://localhost:5000/api/orders', { params: { date: formattedDate } });
 
-      // Directly use the response data since it is an array of orders
       if (response.data) {
-        // Set orders to contain only foodName, quantity, and total
         const orderDetails = response.data.map(order => ({
           foodName: order.foodName,
           quantity: order.quantity,
-          total: order.total // Keep total for revenue calculation
+          total: order.total
         }));
 
-        setOrders(orderDetails); // Set the processed orders
-        const totalRev = orderDetails.reduce((acc, order) => acc + order.total, 0); // Calculate total revenue
-        setTotalRevenue(totalRev); // Set total revenue
+        setOrders(orderDetails);
+        const totalRev = orderDetails.reduce((acc, order) => acc + order.total, 0);
+        setTotalRevenue(totalRev);
       } else {
         setOrders([]);
         setTotalRevenue(0);
@@ -118,11 +108,10 @@ const AdminDashboard = () => {
   const fetchSalesData = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/orders/last7days');
-      // Check if response contains salesData and sumTotal
       if (response.data && Array.isArray(response.data.salesData)) {
-        const total = response.data.sumTotal; // Use sumTotal from the response
-        setSalesData(response.data.salesData); // Set salesData from the response
-        setSumRevenue(total); // Set totalRevenue from sumTotal
+        const total = response.data.sumTotal;
+        setSalesData(response.data.salesData);
+        setSumRevenue(total);
       } else {
         console.error('Expected sales data to be an array but got:', response.data);
         setSalesData([]);
@@ -137,9 +126,8 @@ const AdminDashboard = () => {
     fetchSalesData();
   }, []);
 
-  // Function to navigate to AddMiddleman component
   const handleAddMiddleman = () => {
-    navigate('/addmiddleman'); // Redirect to AddMiddleman page
+    navigate('/addmiddleman');
   };
 
   const data = {
@@ -151,21 +139,21 @@ const AdminDashboard = () => {
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1,
-        barPercentage: 0.6, // Adjust the width of the bars
-        categoryPercentage: 0.8, // Adjust the spacing between bars
+        barPercentage: 0.6,
+        categoryPercentage: 0.8,
       },
     ],
   };
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // Allow the chart to fill the container
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'top',
         labels: {
           font: {
-            size: 16, // Increase font size for legend
+            size: 16,
           },
         },
       },
@@ -173,7 +161,7 @@ const AdminDashboard = () => {
         display: true,
         text: 'Sales Data for Last 7 Days',
         font: {
-          size: 20, // Increase font size for title
+          size: 20,
         },
       },
     },
@@ -183,12 +171,12 @@ const AdminDashboard = () => {
           display: true,
           text: 'Date',
           font: {
-            size: 16, // Increase font size for x-axis title
+            size: 16,
           },
         },
         ticks: {
           font: {
-            size: 14, // Increase font size for x-axis labels
+            size: 14,
           },
         },
       },
@@ -197,12 +185,12 @@ const AdminDashboard = () => {
           display: true,
           text: 'Sales ($)',
           font: {
-            size: 16, // Increase font size for y-axis title
+            size: 16,
           },
         },
         ticks: {
           font: {
-            size: 14, // Increase font size for y-axis labels
+            size: 14,
           },
         },
       },
@@ -226,12 +214,12 @@ const AdminDashboard = () => {
         {/* Manage Food items section starts */}
         <div className="mb-6">
           <FoodForm foods={foods} setFoods={setFoods} />
-          <div className="absolute top-48 right-72 flex flex-col gap-4"> {/* Changed to absolute positioning */}
-    <button className='relative overflow-hidden rounded-lg px-20 py-6' onClick={handleAddMiddleman}>
-        <span className='absolute inset-px flex items-center justify-center rounded-lg bg-black bg-gradient-to-t from-neutral-800 text-neutral-50'>Add Middleman</span>
-        <span aria-hidden className='absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-ping before:bg-gradient-to-r before:from-purple-700 before:via-red-500 before:to-amber-400'/>
-    </button>
-</div>
+          <div className="absolute top-48 right-72 flex flex-col gap-4">
+            <button className='relative overflow-hidden rounded-lg px-20 py-6' onClick={handleAddMiddleman}>
+              <span className='absolute inset-px flex items-center justify-center rounded-lg bg-black bg-gradient-to-t from-neutral-800 text-neutral-50'>Add Middleman</span>
+              <span aria-hidden className='absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-ping before:bg-gradient-to-r before:from-purple-700 before:via-red-500 before:to-amber-400' />
+            </button>
+          </div>
         </div>
         {/* Manage Food items section ends */}
 
@@ -292,7 +280,7 @@ const AdminDashboard = () => {
                 <Bar
                   data={data}
                   options={options}
-                  style={{ height: '100%', width: '100%' }} // Ensure the chart fills the container
+                  style={{ height: '100%', width: '100%' }}
                 />
               </div>
               <div className="bg-gray-200 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl duration-300 ease-in-out mx-auto my-4" style={{ width: 'fit-content' }}>

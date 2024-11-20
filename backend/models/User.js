@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
   },
   ismiddle: {
     type: Boolean,
-    default: false // New field to indicate if the user is a middleman
+    default: false
   },
   email: {
     type: String,
@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
     trim: true
   },
   features: {
-    type: [String], // Array to store features assigned to the middleman
+    type: [String],
     default: []
   },
   createdAt: {

@@ -13,16 +13,15 @@ import { useLocation } from 'react-router-dom';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const MiddlemanDashboard = () => {
-  const location = useLocation(); // Get the location object
-  const [foods, setFoods] = useState([]); // State for food items
-  const [orders, setOrders] = useState([]); // State for orders
-  const [totalRevenue, setTotalRevenue] = useState(0); // State for total revenue
-  const [sumRevenue, setSumRevenue] = useState(0); // State for sum revenue from last 7 days
-  const [date, setDate] = useState(''); // State for selected date
-  const [salesData, setSalesData] = useState([]); // State for sales data
-  const features = location.state?.features || []; // State for features
+  const location = useLocation();
+  const [foods, setFoods] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [sumRevenue, setSumRevenue] = useState(0);
+  const [date, setDate] = useState('');
+  const [salesData, setSalesData] = useState([]);
+  const features = location.state?.features || [];
 
-  // Fetch food items on component mount
   useEffect(() => {
     const fetchFoods = async () => {
       try {
@@ -39,8 +38,6 @@ const MiddlemanDashboard = () => {
     };
     fetchFoods();
   }, []);
-
-  // Fetch food items if the feature 'manageFoods' is available
   useEffect(() => {
     if (features.includes('manageFoods')) {
       const fetchFoods = async () => {
@@ -60,14 +57,13 @@ const MiddlemanDashboard = () => {
     }
   }, [features]);
 
-  // Fetch sales data for the last 7 days
   const fetchSalesData = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/orders/last7days');
       if (response.data && Array.isArray(response.data.salesData)) {
-        const total = response.data.sumTotal; // Use sumTotal from the response
-        setSalesData(response.data.salesData); // Set salesData from the response
-        setSumRevenue(total); // Set totalRevenue from sumTotal
+        const total = response.data.sumTotal;
+        setSalesData(response.data.salesData);
+        setSumRevenue(total);
       } else {
         console.error('Expected sales data to be an array but got:', response.data);
         setSalesData([]);
@@ -79,10 +75,9 @@ const MiddlemanDashboard = () => {
   };
 
   useEffect(() => {
-    fetchSalesData(); // Fetch sales data on component mount
+    fetchSalesData();
   }, []);
 
-  // Fetch orders based on the selected date
   const fetchOrders = async () => {
     if (date === '') {
       alert('Please select a date to fetch orders');
@@ -96,12 +91,12 @@ const MiddlemanDashboard = () => {
         const orderDetails = response.data.map(order => ({
           foodName: order.foodName,
           quantity: order.quantity,
-          total: order.total // Keep total for revenue calculation
+          total: order.total
         }));
 
-        setOrders(orderDetails); // Set the processed orders
-        const totalRev = orderDetails.reduce((acc, order) => acc + order.total, 0); // Calculate total revenue
-        setTotalRevenue(totalRev); // Set total revenue
+        setOrders(orderDetails);
+        const totalRev = orderDetails.reduce((acc, order) => acc + order.total, 0);
+        setTotalRevenue(totalRev);
       } else {
         setOrders([]);
         setTotalRevenue(0);
@@ -111,7 +106,6 @@ const MiddlemanDashboard = () => {
     }
   };
 
-  // Generate PDF report of orders
   const generatePDFReport = () => {
     const reportDate = moment(date).format('DD-MM-YYYY');
     const doc = new jsPDF();
@@ -211,93 +205,93 @@ const MiddlemanDashboard = () => {
   };
 
   return (
-      <div style={{
-        margin: 0,
-        padding: 0,
-        height: '100vh',
-        backgroundImage: `url(${assets.fastfood})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'scroll',
+    <div style={{
+      margin: 0,
+      padding: 0,
+      height: '100vh',
+      backgroundImage: `url(${assets.fastfood})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundAttachment: 'scroll',
+    }}>
+      <div className="max-w-6xl mx-auto p-6 border-hidden rounded-lg shadow-md" style={{
+        background: 'linear-gradient(to right, orange, yellow, white)',
       }}>
-        <div className="max-w-6xl mx-auto p-6 border-hidden rounded-lg shadow-md" style={{
-          background: 'linear-gradient(to right, orange, yellow, white)',
-        }}>
-          <Navbar name={"Middleman Dashboard"} />
-          {features.includes('manageFoods') && (
-            <div className="mb-6">
-              <FoodForm foods={foods} setFoods={setFoods} />
+        <Navbar name={"Middleman Dashboard"} />
+        {features.includes('manageFoods') && (
+          <div className="mb-6">
+            <FoodForm foods={foods} setFoods={setFoods} />
+          </div>
+        )}
+        <div className='mt-8'>
+          {features.includes('getDailyOrders') && (
+            <div className="mt-8">
+              <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+              <div className="flex items-center space-x-4">
+                <input
+                  type="date"
+                  className="border p-2 rounded mb-4"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                />
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+                  onClick={fetchOrders}
+                >
+                  Fetch Orders
+                </button>
+                {orders.length > 0 && (
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded mb-4"
+                    onClick={generatePDFReport}
+                  >
+                    Export to PDF
+                  </button>
+                )}
+              </div>
+              {orders.length > 0 && (
+                <div>
+                  <div className="bg-yellow-200 p-4 rounded-lg mb-4 shadow-md">
+                    <p className="text-lg font-bold">Total Sales: ${totalRevenue.toFixed(2)}</p>
+                  </div>
+                  <h3 className="mt-4 font-bold text-lg">Fetched Orders:</h3>
+                  <ul>
+                    {orders.map((order, index) => (
+                      <li key={index}>
+                        {order.foodName} - Quantity: {order.quantity} - Total: {order.total}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {orders.length === 0 && (
+                <p className='text-lg text-emerald-700'>No recorded orders are available.</p>
+              )}
             </div>
           )}
-          <div className='mt-8'>
-            {features.includes('getDailyOrders') && (
-              <div className="mt-8">
-                <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-                <div className="flex items-center space-x-4">
-                  <input
-                    type="date"
-                    className="border p-2 rounded mb-4"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
+          {features.includes('getWeeklySales') && (
+            <div className="mt-8">
+              <h2 className="text-xl font-bold mb-4">Sales Report - Last 7 Days</h2>
+              <div className="flex justify-between items-center mb-4">
+                <div style={{ width: '450px', height: '450px', padding: '20px', backgroundColor: 'transparent', borderRadius: '8px' }}>
+                  <Bar
+                    data={data}
+                    options={options}
+                    style={{ height: '100%', width: '100%' }}
                   />
-                  <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-                    onClick={fetchOrders}
-                  >
-                    Fetch Orders
-                  </button>
-                  {orders.length > 0 && (
-                    <button
-                      className="bg-green-500 text-white px-4 py-2 rounded mb-4"
-                      onClick={generatePDFReport}
-                    >
-                      Export to PDF
-                    </button>
-                  )}
                 </div>
-                {orders.length > 0 && (
-                  <div>
-                    <div className="bg-yellow-200 p-4 rounded-lg mb-4 shadow-md">
-                      <p className="text-lg font-bold">Total Sales: ${totalRevenue.toFixed(2)}</p>
-                    </div>
-                    <h3 className="mt-4 font-bold text-lg">Fetched Orders:</h3>
-                    <ul>
-                      {orders.map((order, index) => (
-                        <li key={index}>
-                          {order.foodName} - Quantity: {order.quantity} - Total: {order.total}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {orders.length === 0 && (
-                  <p className='text-lg text-emerald-700'>No recorded orders are available.</p>
-                )}
-              </div>
-            )}
-            {features.includes('getWeeklySales') && (
-              <div className="mt-8">
-                <h2 className="text-xl font-bold mb-4">Sales Report - Last 7 Days</h2>
-                <div className="flex justify-between items-center mb-4">
-                  <div style={{ width: '450px', height: '450px', padding: '20px', backgroundColor: 'transparent', borderRadius: '8px' }}>
-                    <Bar
-                      data={data}
-                      options={options}
-                      style={{ height: '100%', width: '100%' }}
-                    />
-                  </div>
-                  <div className="bg-gray-200 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl duration-300 ease-in-out mx-auto my-4" style={{ width: 'fit-content' }}>
-                    <h3 className="text-lg font-bold text-gray-800">Total Revenue (Last 7 Days)</h3>
-                    <p className="text-2xl text-gray-900 font-semibold">${sumRevenue.toFixed(2)}</p>
-                  </div>
+                <div className="bg-gray-200 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl duration-300 ease-in-out mx-auto my-4" style={{ width: 'fit-content' }}>
+                  <h3 className="text-lg font-bold text-gray-800">Total Revenue (Last 7 Days)</h3>
+                  <p className="text-2xl text-gray-900 font-semibold">${sumRevenue.toFixed(2)}</p>
                 </div>
               </div>
-            )}
-          </div>
-          {features.length === 0 && <p>No features assigned to you.</p>}
+            </div>
+          )}
         </div>
+        {features.length === 0 && <p>No features assigned to you.</p>}
       </div>
+    </div>
   );
 };
 

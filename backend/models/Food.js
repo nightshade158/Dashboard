@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Define the Food Schema
 const foodSchema = mongoose.Schema({
   name: {
     type: String,
@@ -10,9 +9,7 @@ const foodSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-}, { timestamps: true }); // Timestamps to keep track of creation and modification times
-
-// Create the model for the food collection
+}, { timestamps: true });
 const Food = mongoose.model('Food', foodSchema);
 
 module.exports = Food;

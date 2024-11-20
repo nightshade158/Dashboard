@@ -4,46 +4,37 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
+@layer base {
 
-  html{
+  html {
     font-family: "Sour Gummy", sans-serif;
     font-optical-sizing: auto;
     font-style: oblique;
     font-size: large;
   }
-
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100vh; /* Make sure the body takes full height */
-    background-image: url('path/to/your/background-image.jpg'); /* Set your background image */
-    background-size: cover; /* Cover the entire viewport */
-    background-position: center; /* Center the background image */
-  }
 }
 
-@layer components{
+@layer components {
 
-  .input-box{
+  .input-box {
     @apply w-full text-sm bg-transparent border-[1.5px] px-5 py-3 rounded mb-4 outline-none;
   }
 
-  .btn-primary{
+  .btn-primary {
     @apply w-full text-sm font-bold bg-blue-600 text-white p-2 rounded my-1 hover:bg-blue-900;
   }
 
-  .icon-btn{
+  .icon-btn {
     @apply text-xl text-slate-300 cursor-pointer hover:text-primary;
   }
 
-  .input-label{
+  .input-label {
     @apply text-xs text-slate-400;
   }
 
   .translucent-bg {
-    background-color: rgba(255, 255, 255, 0.8); /* White background with 80% opacity */
-    border-radius: 10px; /* Optional: Add some border radius */
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
   }
-  
+
 }

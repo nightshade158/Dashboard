@@ -1,27 +1,28 @@
 const moment = require('moment');
 const express = require('express');
-const Order = require('../models/Order'); // Assuming you already have the Order model
+const Order = require('../models/Order');
 const Food = require('../models/Food')
 const router = express.Router();
 let orders = [];
-// Route to fetch order summary with total sales for the day and food items sold
 router.get('/summary', async (req, res) => {
-  const { date } = req.query; // Expect a date in query string (DD-MM-YYYY format)
+  const { date } = req.query;
 
   try {
     const startDate = new Date(date);
     const endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + 1); // End of the day
+    endDate.setDate(endDate.getDate() + 1);
 
     const orders = await Order.aggregate([
-      { $match: { date: moment(startDate).format('YYYY-MM-DD') } }, // Match by date field
+      { $match: { date: moment(startDate).format('YYYY-MM-DD') } },
       { $unwind: '$orders' },
-      { $group: {
-        _id: '$orders.foodName',
-        totalQuantity: { $sum: '$orders.quantity' },
-        total: { $sum: '$orders.total' }
-      }},
-      { $sort: { total: -1 } } // Sort by total descending
+      {
+        $group: {
+          _id: '$orders.foodName',
+          totalQuantity: { $sum: '$orders.quantity' },
+          total: { $sum: '$orders.total' }
+        }
+      },
+      { $sort: { total: -1 } }
     ]);
 
     const totalRevenue = orders.reduce((acc, order) => acc + order.total, 0);
@@ -35,46 +36,39 @@ router.get('/summary', async (req, res) => {
 router.post('/', (req, res) => {
   const { foodId, quantity } = req.body;
 
-  // Validate request body
   if (!foodId || !quantity) {
     return res.status(400).send({ message: 'Food ID and quantity are required' });
   }
 
-  // Create a new order object
   const newOrder = {
-    id: orders.length + 1, // Simple ID generation
+    id: orders.length + 1,
     foodId,
     quantity,
-    orderDate: new Date() // Record the order date
+    orderDate: new Date()
   };
 
-  // Save the order to the in-memory array
   orders.push(newOrder);
 
-  // Send a success response
   res.status(201).send({ message: 'Order created successfully', order: newOrder });
 });
 
-// GET endpoint to retrieve all orders (for demonstration purposes)
 router.get('/', async (req, res) => {
-  const { date } = req.query; // Get the date parameter from the query string
+  const { date } = req.query;
 
   try {
-    // Fetch the order entry for the specified date
-    const orderEntry = await Order.findOne({ date }); // Assuming 'date' is in YYYY-MM-DD format
+    const orderEntry = await Order.findOne({ date });
 
     if (!orderEntry || orderEntry.orders.length === 0) {
       return res.status(200).json([])
     }
 
-    // Extract the foodName and quantity from each order in the orders array
     const orderDetails = orderEntry.orders.map(order => ({
       foodName: order.foodName,
       quantity: order.quantity,
       total: order.total
     }));
 
-    res.status(200).json(orderDetails); // Send the extracted details as a JSON response
+    res.status(200).json(orderDetails);
   } catch (error) {
     console.error('Error fetching order details:', error);
     res.status(500).json({ message: 'Error fetching order details' });
@@ -82,37 +76,33 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/checkout', async (req, res) => {
-  const { orders } = req.body; // Get orders from request body
-  const date = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+  const { orders } = req.body;
+  const date = new Date().toISOString().split('T')[0];
 
   try {
-    // Find or create an entry for today
     let dailyOrders = await Order.findOne({ date });
 
     if (!dailyOrders) {
-      // If no entry for today, create one
       dailyOrders = new Order({ date, orders: [], grandTotal: 0 });
     }
 
-    // Calculate total for each order and add to daily orders
     let dailyTotal = 0;
     const updatedOrders = await Promise.all(orders.map(async (order) => {
-      const foodItem = await Food.findById(order.foodId); // Fetch food item from database
-      const orderTotal = foodItem.price * order.quantity; // Calculate total for this order
+      const foodItem = await Food.findById(order.foodId);
+      const orderTotal = foodItem.price * order.quantity;
       dailyTotal += orderTotal;
 
       return {
         foodId: order.foodId,
-        foodName: foodItem.name, // Add foodName here
+        foodName: foodItem.name,
         quantity: order.quantity,
-        total: orderTotal, // Total for this order
+        total: orderTotal,
       };
     }));
 
-    // Append new orders to the existing orders array
     dailyOrders.orders.push(...updatedOrders);
-    dailyOrders.grandTotal += dailyTotal; // Update grand total
-    await dailyOrders.save(); // Save the updated daily orders
+    dailyOrders.grandTotal += dailyTotal;
+    await dailyOrders.save();
 
     res.status(200).json({ message: 'Checkout successful!', orders: dailyOrders.orders, grandTotal: dailyOrders.grandTotal });
   } catch (error) {
@@ -125,51 +115,45 @@ router.get('/last7days', async (req, res) => {
   const today = new Date();
   const last7Days = [];
 
-  // Generate the last 7 days in YYYY-MM-DD format
   for (let i = 6; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
-    last7Days.push(date.toISOString().split('T')[0]); // Push date in YYYY-MM-DD format
+    last7Days.push(date.toISOString().split('T')[0]);
   }
 
   try {
-    // Create a start date for the last 7 days
     const startDate = new Date();
-    startDate.setDate(today.getDate() - 6); // Set startDate to 6 days before today
+    startDate.setDate(today.getDate() - 6);
 
     const orders = await Order.aggregate([
       {
         $match: {
-          date: { $gte: startDate.toISOString().split('T')[0] } // Match orders from the last 7 days
+          date: { $gte: startDate.toISOString().split('T')[0] }
         }
       },
       {
         $group: {
-          _id: "$date", // Group by date field
-          totalSales: { $sum: "$grandTotal" } // Sum the grandTotal for each day
+          _id: "$date",
+          totalSales: { $sum: "$grandTotal" }
         }
       },
       {
-        $sort: { _id: 1 } // Sort by date
+        $sort: { _id: 1 }
       }
     ]);
 
-    // Create a map for quick lookup of total sales by date
     const salesMap = orders.reduce((acc, order) => {
-      acc[order._id] = order.totalSales; // Map date to totalSales
+      acc[order._id] = order.totalSales;
       return acc;
     }, {});
 
-    // Fill in missing days with 0 sales and prepare the response
     const salesData = last7Days.map(date => {
-      const totalSales = salesMap[date] || 0; // Get totalSales or default to 0
-      return { date, totalSales }; // Create object for response
+      const totalSales = salesMap[date] || 0;
+      return { date, totalSales };
     });
 
-    // Calculate the sum total of all grand totals
     const sumTotal = salesData.reduce((sum, day) => sum + day.totalSales, 0);
 
-    // Return both the sales data and the sum total
     res.json({ salesData, sumTotal });
   } catch (error) {
     console.error('Error fetching orders:', error);

@@ -26,23 +26,23 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Authenticate onLogin={handleLogin} />} />
         <Route path="/signup" element={<SignUp />} />
-        
+
         {/* Protected Routes */}
-        <Route 
-          path="/admin" 
-          element={isAuthenticated && userRole === 'admin' ? <AdminDashboard onLogout={handleLogout} /> : <Navigate to="/" />} 
+        <Route
+          path="/admin"
+          element={isAuthenticated && userRole === 'admin' ? <AdminDashboard onLogout={handleLogout} /> : <Navigate to="/" />}
         />
-        <Route 
-          path="/user" 
-          element={isAuthenticated && userRole === 'user' ? <UserDashboard onLogout={handleLogout} /> : <Navigate to="/" />} 
+        <Route
+          path="/user"
+          element={isAuthenticated && userRole === 'user' ? <UserDashboard onLogout={handleLogout} /> : <Navigate to="/" />}
         />
-        <Route 
-          path="/middleman" 
-          element={isAuthenticated && userRole === 'middleman' ? <MiddlemanDashboard onLogout={handleLogout} /> : <Navigate to="/" />} 
+        <Route
+          path="/middleman"
+          element={isAuthenticated && userRole === 'middleman' ? <MiddlemanDashboard onLogout={handleLogout} /> : <Navigate to="/" />}
         />
-        <Route 
-          path="/addmiddleman" 
-          element={isAuthenticated && userRole === 'admin' ? <AddMiddleman /> : <Navigate to="/" />} 
+        <Route
+          path="/addmiddleman"
+          element={isAuthenticated && userRole === 'admin' ? <AddMiddleman /> : <Navigate to="/" />}
         />
       </Routes>
     </Router>

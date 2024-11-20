@@ -34,12 +34,11 @@ const Authenticate = ({ onLogin }) => {
         const token = response.data.token;
         localStorage.setItem("token", token);
         
-        // Get the user role from the response
         const isAdmin = response.data.isadmin;
         const isMiddleman = response.data.ismiddle;
         const role = isAdmin ? 'admin' : isMiddleman ? 'middleman' : 'user';
 
-        onLogin(role); // Pass the role to the onLogin function
+        onLogin(role);
 
         if (isMiddleman) {
           const featuresResponse = await axios.get(`http://localhost:5000/api/users/middlemanfeatures`, { params: { username: user } });

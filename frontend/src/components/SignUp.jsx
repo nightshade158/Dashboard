@@ -5,7 +5,7 @@ import axios from 'axios';
 import { assets } from '../assets/assets';
 
 const SignUp = () => {
-  const [username, setUsername] = useState(""); // Added username state
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -42,24 +42,21 @@ const SignUp = () => {
 
     setError('');
 
-    // Signup API call
     try {
       const response = await axios.post("http://localhost:5000/api/users/signup", {
-        username: username, // Send username
+        username: username,
         email: email,
         password: password,
       });
-      // Handle successful registration response
       if (response.data && response.data.message) {
         setError(response.data.message);
         return;
       }
       if (response.data && response.data.authId) {
-        localStorage.setItem("token", response.data.authId); // Store authId
+        localStorage.setItem("token", response.data.authId);
         navigate('/auth');
       }
     } catch (error) {
-      // Handle Signup error
       if (error.response && error.response.data && error.response.data.message) {
         setError(error.response.data.message);
       } else {
@@ -71,34 +68,34 @@ const SignUp = () => {
   return (
     <>
       <div className="flex items-center justify-center mt-28" style={{
-    margin: 0,
-    padding: 0,
-    height: '100vh', // Make sure the div takes full height
-    backgroundImage: `url(${assets.Background})`, // Set your background image
-    backgroundSize: 'cover', // Cover the entire viewport
-    backgroundPosition: 'center', // Center the background image
-  }}>
+        margin: 0,
+        padding: 0,
+        height: '100vh',
+        backgroundImage: `url(${assets.Background})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}>
         <div className="w-96 border-hidden rounded bg-transparent px-7 py-10">
           <form onSubmit={handleSignUp}>
             <h4 className="text-8xl font-bold mb-7 text-center">SignUp</h4>
 
-            <input 
-              type="text" 
-              placeholder="Username" 
-              className="input-box bg-white" 
+            <input
+              type="text"
+              placeholder="Username"
+              className="input-box bg-white"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
 
-            <input 
-              type="text" 
-              placeholder="Email" 
-              className="input-box bg-white" 
+            <input
+              type="text"
+              placeholder="Email"
+              className="input-box bg-white"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            <PasswordInput 
+            <PasswordInput
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
