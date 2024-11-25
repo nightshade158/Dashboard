@@ -63,7 +63,7 @@ const UserDashboard = () => {
       return;
     }
     const updatedOrders = await Promise.all(orders.map(async (order) => {
-      const response = await axios.get(`/api/foods/${order.foodId}`);
+      const response = await axios.get(`http://3.85.103.160:5000/api/foods/${order.foodId}`);
       const foodItem = response.data;
       const orderTotal = foodItem.price * order.quantity;
 

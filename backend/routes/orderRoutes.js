@@ -76,38 +76,75 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/checkout', async (req, res) => {
-  const { orders } = req.body;
-  const date = new Date().toISOString().split('T')[0];
-
   try {
+    // Validate input
+    const { orders } = req.body;
+    
+    if (!orders || !Array.isArray(orders) || orders.length === 0) {
+      return res.status(400).json({ message: 'Invalid order data' });
+    }
+
+    const date = new Date().toISOString().split('T')[0];
+
+    // Find or create daily order record
     let dailyOrders = await Order.findOne({ date });
 
     if (!dailyOrders) {
       dailyOrders = new Order({ date, orders: [], grandTotal: 0 });
     }
 
+    // Process orders
+    const updatedOrders = [];
     let dailyTotal = 0;
-    const updatedOrders = await Promise.all(orders.map(async (order) => {
+
+    for (const order of orders) {
+      // Validate each order
+      if (!order.foodId || !order.quantity) {
+        return res.status(400).json({ message: 'Invalid order structure' });
+      }
+
+      // Find food item
       const foodItem = await Food.findById(order.foodId);
+      
+      if (!foodItem) {
+        return res.status(404).json({ message: `Food item not found: ${order.foodId}` });
+      }
+
+      // Calculate order total
       const orderTotal = foodItem.price * order.quantity;
       dailyTotal += orderTotal;
 
-      return {
+      // Prepare order details
+      const orderDetails = {
         foodId: order.foodId,
         foodName: foodItem.name,
         quantity: order.quantity,
         total: orderTotal,
       };
-    }));
 
+      updatedOrders.push(orderDetails);
+    }
+
+    // Update daily orders
     dailyOrders.orders.push(...updatedOrders);
     dailyOrders.grandTotal += dailyTotal;
+    
+    // Save the updated order
     await dailyOrders.save();
 
-    res.status(200).json({ message: 'Checkout successful!', orders: dailyOrders.orders, grandTotal: dailyOrders.grandTotal });
+    // Respond with success
+    res.status(200).json({ 
+      message: 'Checkout successful!', 
+      orders: dailyOrders.orders, 
+      grandTotal: dailyOrders.grandTotal 
+    });
+
   } catch (error) {
     console.error('Error saving orders:', error);
-    res.status(500).json({ message: 'Error saving orders', error });
+    res.status(500).json({ 
+      message: 'Error processing checkout', 
+      error: error.message 
+    });
   }
 });
 
