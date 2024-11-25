@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/foods');
+        const response = await axios.get('http://3.85.103.160:5000/api/foods');
         if (Array.isArray(response.data)) {
           setFoods(response.data);
         } else {
@@ -84,7 +84,7 @@ const AdminDashboard = () => {
     }
     try {
       const formattedDate = moment(date).format('YYYY-MM-DD');
-      const response = await axios.get('http://localhost:5000/api/orders', { params: { date: formattedDate } });
+      const response = await axios.get('http://3.85.103.160:5000/api/orders', { params: { date: formattedDate } });
 
       if (response.data) {
         const orderDetails = response.data.map(order => ({
@@ -107,7 +107,7 @@ const AdminDashboard = () => {
 
   const fetchSalesData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/orders/last7days');
+      const response = await axios.get('http://3.85.103.160:5000/api/orders/last7days');
       if (response.data && Array.isArray(response.data.salesData)) {
         const total = response.data.sumTotal;
         setSalesData(response.data.salesData);

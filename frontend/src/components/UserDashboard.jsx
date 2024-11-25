@@ -12,7 +12,7 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/foods');
+        const response = await axios.get('http://3.85.103.160:5000/api/foods');
         if (Array.isArray(response.data)) {
           setFoods(response.data);
         } else {
@@ -44,7 +44,7 @@ const UserDashboard = () => {
 
     try {
       const newOrder = { foodId: selectedFood._id, quantity };
-      await axios.post('http://localhost:5000/api/orders', newOrder);
+      await axios.post('http://3.85.103.160:5000/api/orders', newOrder);
       const updatedOrders = [...orders, newOrder];
       setOrders(updatedOrders);
       alert('Food item added to cart.');
@@ -76,7 +76,7 @@ const UserDashboard = () => {
     }));
 
     try {
-      const response = await axios.post('http://localhost:5000/api/orders/checkout', { orders: updatedOrders });
+      const response = await axios.post('http://3.85.103.160:5000/api/orders/checkout', { orders: updatedOrders });
       alert(`Checkout successful! Total price: $${response.data.grandTotal.toFixed(2)}`);
       setOrders([]);
     } catch (error) {

@@ -43,7 +43,7 @@ const SignUp = () => {
     setError('');
 
     try {
-      const response = await axios.post("http://localhost:5000/api/users/signup", {
+      const response = await axios.post("http://3.85.103.160:5000/api/users/signup", {
         username: username,
         email: email,
         password: password,

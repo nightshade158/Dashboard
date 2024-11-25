@@ -25,7 +25,7 @@ const AddMiddleman = () => {
   useEffect(() => {
     const fetchMiddlemen = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/middlemen');
+        const response = await axios.get('http://3.85.103.160:5000/api/users/middlemen');
         console.log('Fetched middlemen:', response.data);
         setExistingMiddlemen(response.data);
       } catch (error) {
@@ -47,7 +47,7 @@ const AddMiddleman = () => {
     e.preventDefault();
     setErrorMessage('');
     try {
-      const response = await axios.post('http://localhost:5000/api/users/addmiddleman', {
+      const response = await axios.post('http://3.85.103.160:5000/api/users/addmiddleman', {
         username,
         email,
         password,
@@ -65,7 +65,7 @@ const AddMiddleman = () => {
           getWeeklySales: false,
         });
         navigate('/admin');
-        const updatedMiddlemenResponse = await axios.get('http://localhost:5000/api/users/middlemen');
+        const updatedMiddlemenResponse = await axios.get('http://3.85.103.160:5000/api/users/middlemen');
         setExistingMiddlemen(updatedMiddlemenResponse.data);
       } else {
         setErrorMessage('Failed to add middleman, please try again.');
@@ -99,14 +99,14 @@ const AddMiddleman = () => {
   const confirmFeatureUpdate = async () => {
     if (selectedMiddleman) {
       try {
-        const response = await axios.post('http://localhost:5000/api/users/editmiddlefeatures', {
+        const response = await axios.post('http://3.85.103.160:5000/api/users/editmiddlefeatures', {
           username: selectedMiddleman.username,
           features: selectedFeatures,
         });
 
         if (response.status === 200) {
           alert('Middleman features updated successfully');
-          const updatedMiddlemenResponse = await axios.get('http://localhost:5000/api/users/middlemen');
+          const updatedMiddlemenResponse = await axios.get('http://3.85.103.160:5000/api/users/middlemen');
           setExistingMiddlemen(updatedMiddlemenResponse.data);
           setModalVisible(false);
         } else {
