@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import FoodForm from './FoodForm';
 import { Bar } from 'react-chartjs-2';
