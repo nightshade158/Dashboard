@@ -9,7 +9,7 @@ const FoodForm = ({ foods, setFoods }) => {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const response = await axios.get(`http://${import.meta.env.VITE_DOMAIN}:5000/api/foods`);
+        const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/api/foods`);
         setFoods(response.data);
       } catch (error) {
         console.error('Error fetching food items:', error);
@@ -26,7 +26,7 @@ const FoodForm = ({ foods, setFoods }) => {
 
     try {
       const newFood = { name: foodName, price: parseFloat(foodPrice) };
-      const response = await axios.post(`http://${import.meta.env.VITE_DOMAIN}:5000/api/foods`, newFood);
+      const response = await axios.post(`${import.meta.env.VITE_DOMAIN}/api/foods`, newFood);
       setFoods((prevFoods) => [...prevFoods, response.data]);
       setFoodName('');
       setFoodPrice('');
@@ -43,7 +43,7 @@ const FoodForm = ({ foods, setFoods }) => {
 
     try {
       const updatedFood = { name: foodName, price: parseFloat(foodPrice) };
-      const response = await axios.put(`http://${import.meta.env.VITE_DOMAIN}:5000/api/foods/${editingFood._id}`, updatedFood);
+      const response = await axios.put(`${import.meta.env.VITE_DOMAIN}/api/foods/${editingFood._id}`, updatedFood);
       setFoods((prevFoods) =>
         prevFoods.map((food) => food._id === editingFood._id ? response.data : food)
       );
@@ -57,7 +57,7 @@ const FoodForm = ({ foods, setFoods }) => {
 
   const handleDeleteFood = async (id) => {
     try {
-      await axios.delete(`http://${import.meta.env.VITE_DOMAIN}:5000/api/foods/${id}`);
+      await axios.delete(`${import.meta.env.VITE_DOMAIN}/api/foods/${id}`);
       setFoods((prevFoods) => prevFoods.filter((food) => food._id !== id));
     } catch (error) {
       console.error('Error deleting food:', error);

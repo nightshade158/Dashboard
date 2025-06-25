@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const response = await axios.get(`http://${import.meta.env.VITE_DOMAIN}:5000/api/foods`);
+        const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/api/foods`);
         if (Array.isArray(response.data)) {
           setFoods(response.data);
         } else {
@@ -84,7 +84,7 @@ const AdminDashboard = () => {
     }
     try {
       const formattedDate = moment(date).format('YYYY-MM-DD');
-      const response = await axios.get(`http://${import.meta.env.VITE_DOMAIN}:5000/api/orders`, { params: { date: formattedDate } });
+      const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/api/orders`, { params: { date: formattedDate } });
 
       if (response.data) {
         const orderDetails = response.data.map(order => ({
@@ -107,7 +107,7 @@ const AdminDashboard = () => {
 
   const fetchSalesData = async () => {
     try {
-      const response = await axios.get(`http://${import.meta.env.VITE_DOMAIN}:5000/api/orders/last7days`);
+      const response = await axios.get(`${import.meta.env.VITE_DOMAIN}/api/orders/last7days`);
       if (response.data && Array.isArray(response.data.salesData)) {
         const total = response.data.sumTotal;
         setSalesData(response.data.salesData);
