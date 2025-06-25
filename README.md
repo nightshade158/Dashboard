@@ -91,7 +91,8 @@ npm install
 npm run dev
 ```
 
-The frontend will typically run on [http://localhost:5173](http://localhost:5173) and the backend on [http://localhost:5000](http://localhost:5000).
+The frontend will typically run on [http://localhost:5173](http://localhost:5173) and the backend on [http://localhost:5000](http://localhost:5000). Set up env files in frontend directory and backend directory. The env file in frontend directory
+should have a variable VITE_DOMAIN=your_domain_ip and the env file in backend should have the variable MONGODB_URI=mongodb_connection_string.
 
 ---
 
