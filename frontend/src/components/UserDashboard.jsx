@@ -12,7 +12,7 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/foods');
+        const response = await axios.get(`http://${import.meta.env.VITE_DOMAIN}:5000/api/foods`);
         if (Array.isArray(response.data)) {
           setFoods(response.data);
         } else {
@@ -44,7 +44,7 @@ const UserDashboard = () => {
 
     try {
       const newOrder = { foodId: selectedFood._id, quantity };
-      await axios.post('http://127.0.0.1:5000/api/orders', newOrder);
+      await axios.post(`http://${import.meta.env.VITE_DOMAIN}:5000/api/orders`, newOrder);
       const updatedOrders = [...orders, newOrder];
       setOrders(updatedOrders);
       alert('Food item added to cart.');
@@ -63,7 +63,7 @@ const UserDashboard = () => {
       return;
     }
     const updatedOrders = await Promise.all(orders.map(async (order) => {
-      const response = await axios.get(`http://127.0.0.1:5000/api/foods/${order.foodId}`);
+      const response = await axios.get(`http://${import.meta.env.VITE_DOMAIN}:5000/api/foods/${order.foodId}`);
       const foodItem = response.data;
       const orderTotal = foodItem.price * order.quantity;
 
@@ -76,7 +76,7 @@ const UserDashboard = () => {
     }));
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/orders/checkout', { orders: updatedOrders });
+      const response = await axios.post(`http://${import.meta.env.VITE_DOMAIN}:5000/api/orders/checkout`, { orders: updatedOrders });
       alert(`Checkout successful! Total price: $${response.data.grandTotal.toFixed(2)}`);
       setOrders([]);
     } catch (error) {

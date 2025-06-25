@@ -25,7 +25,7 @@ const Authenticate = ({ onLogin }) => {
 
     setError("");
     try {
-      const response = await axios.post("http://127.0.0.1:5000/api/users/login", {
+      const response = await axios.post(`http://${import.meta.env.VITE_DOMAIN}:5000/api/users/login`, {
         username: user,
         password: password,
       });
@@ -41,7 +41,7 @@ const Authenticate = ({ onLogin }) => {
         onLogin(role);
 
         if (isMiddleman) {
-          const featuresResponse = await axios.get(`http://127.0.0.1:5000/api/users/middlemanfeatures`, { params: { username: user } });
+          const featuresResponse = await axios.get(`http://${import.meta.env.VITE_DOMAIN}:5000/api/users/middlemanfeatures`, { params: { username: user } });
           const features = featuresResponse.data.features;
 
           navigate("/middleman", { state: { features } });

@@ -43,7 +43,7 @@ const SignUp = () => {
     setError('');
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/api/users/signup", {
+      const response = await axios.post(`http://${import.meta.env.VITE_DOMAIN}:5000/api/users/signup`, {
         username: username,
         email: email,
         password: password,
